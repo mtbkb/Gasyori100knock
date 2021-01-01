@@ -3,7 +3,7 @@ import base as bs
 import numpy as np
 
 
-def gaussian_filter(img, K_size=3, sigma=1.3):
+def emboss_filter(img, K_size=3, sigma=1.3):
     if len(img.shape) == 3:
         H, W, C = img.shape
     else:
@@ -17,12 +17,7 @@ def gaussian_filter(img, K_size=3, sigma=1.3):
 
     ##kernel
     K = np.zeros((K_size, K_size), dtype=np.float)
-    for x in range(-pad, -pad + K_size):
-        for y in range(-pad, -pad + K_size):
-            K[y + pad, x + pad] = np.exp( -(x ** 2 + y ** 2) / (2 * sigma ** 2))
-    
-    K /= (2 * np.pi + sigma * sigma)
-    K /= K.sum()
+    K = np.array([[-2, -1, 0], [-1, 1, 1], [0, 1, 2]], dtype=np.float)
 
     tmp = out.copy()
     for y in range(H):
@@ -50,6 +45,6 @@ def pool2d(_img, w_size=8):
     return out
 
 
-img = cv2.imread("imori_noise.jpg")
-q_img = gaussian_filter(img)
+img = cv2.imread("imori.jpg")
+q_img = emboss_filter(img)
 bs.show_img(q_img)
